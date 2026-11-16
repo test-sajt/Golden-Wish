@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0a0806">
+<title>Golden Wish | Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== Kalendar rezervacija ===== */
+[hidden]{display:none!important}
+.booking{padding:clamp(18px,3.5vw,32px)}
+.bk-help{margin:-6px 0 14px;font-size:.86rem;color:var(--muted)}
+.cal{padding:14px;background:rgba(0,0,0,.3);border:1px solid rgba(217,171,79,.25);border-radius:16px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.cal-title{flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:var(--gold-l)}
+.cal-nav{width:44px;height:44px;flex:none;display:grid;place-items:center;border:1px solid rgba(217,171,79,.5);border-radius:50%;color:var(--gold-l);font-size:1.6rem;line-height:1;transition:.3s}
+.cal-nav:hover:not(:disabled){background:rgba(217,171,79,.16);box-shadow:var(--glow)}
+.cal-nav:disabled{opacity:.25;cursor:not-allowed}
+.cal-dow,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-dow span{padding:4px 0;text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.day{height:44px;display:grid;place-items:center;border:1px solid transparent;border-radius:10px;font-size:.92rem;font-variant-numeric:tabular-nums;transition:background .2s,transform .2s,box-shadow .2s}
+.day.empty{visibility:hidden}
+.day:disabled{cursor:not-allowed}
+.day.past,.day.wait{color:rgba(181,168,143,.28)}
+.day.free{background:rgba(88,190,128,.1);border-color:rgba(88,190,128,.38);color:#c4efd2}
+.day.free:hover{background:rgba(88,190,128,.24);transform:scale(1.06)}
+.day.taken{background:rgba(214,64,64,.2);border-color:rgba(214,64,64,.55);color:#ff9d9d;text-decoration:line-through}
+.day.can-out{cursor:pointer;border-style:dashed;border-color:var(--gold-l)}
+.day.can-out:hover{transform:scale(1.06)}
+.day.in-range{background:rgba(217,171,79,.22);border-color:rgba(217,171,79,.55);color:var(--gold-l)}
+.day.today{box-shadow:inset 0 0 0 1px var(--gold)}
+.day.sel{background:linear-gradient(135deg,#f4d98b,#d9ab4f);border-color:transparent;color:#1a1208;font-weight:600;text-decoration:none;box-shadow:0 0 16px rgba(217,171,79,.6)}
+.is-admin .day.taken{cursor:pointer}
+.is-admin .day.taken:hover{background:rgba(214,64,64,.38);transform:scale(1.06)}
+.cal-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:.74rem;color:var(--muted)}
+.cal-legend i{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-1px;border:1px solid;border-radius:4px}
+.lg-free{background:rgba(88,190,128,.25);border-color:rgba(88,190,128,.6)}
+.lg-taken{background:rgba(214,64,64,.35);border-color:rgba(214,64,64,.7)}
+.lg-sel{background:var(--gold);border-color:var(--gold-l)}
+.cal-msg{min-height:1.4em;margin-top:12px;font-size:.86rem;color:var(--gold-l)}
+.cal-msg.err{color:#ff9d9d}
+.cal-msg.ok{color:#9be3b5}
+.cal-sum{display:none;margin:10px 0 18px;padding:12px 14px;border:1px dashed rgba(217,171,79,.45);border-radius:12px;font-size:.88rem;line-height:1.6}
+.cal-sum.on{display:block}
+.cal-sum b{color:var(--gold-l);font-weight:600}
+.link-btn{margin-left:6px;font-size:.76rem;color:var(--gold);text-decoration:underline}
+.bk-form{margin-top:18px}
+.bk-form .btn{width:100%;margin-top:4px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.bk-done{text-align:center;padding:14px 0 4px}
+.bk-done .ok-ico{width:64px;height:64px;margin:0 auto 14px;display:grid;place-items:center;border:1.5px solid var(--gold);border-radius:50%;font-size:2rem;color:var(--gold-l);box-shadow:var(--glow)}
+.bk-done p{margin:8px 0;color:var(--text)}
+.bk-done a{color:var(--gold-l);text-decoration:underline}
+.bk-done .btn{margin-top:14px}
+@media (max-width:560px){
+  .cal{padding:10px}
+  .cal-dow,.cal-grid{gap:3px}
+  .day{height:40px;font-size:.86rem}
+}
+
+.ad-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px max(20px,calc((100% - 760px)/2));border-bottom:1px solid rgba(217,171,79,.25)}
+.ad-tag{padding:3px 12px;border:1px solid var(--gold);border-radius:40px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-l)}
+.ad-link{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ad-link:hover{color:var(--gold-l)}
+.ad-main{width:min(560px,100% - 32px);margin:40px auto 80px}
+.ad-main .btn{width:100%}
+.ad-count{margin:10px 0 0;font-size:.82rem;color:var(--muted)}
+.ad-out{margin-top:16px;text-align:center}
+</style>
+</head>
+<body>
+
+<header class="ad-top">
+  <a class="brand" href="index.html">Golden <em>wish</em></a>
+  <span class="ad-tag">Admin</span>
+  <a class="ad-link" href="index.html">← Sajt</a>
+</header>
+
+<main class="ad-main">
+
+  <!-- Prijava -->
+  <section class="form" id="login">
+    <h3>Prijava</h3>
+    <form id="loginForm" novalidate>
+      <label>Lozinka<input type="password" id="pw" autocomplete="current-password" placeholder="Unesite lozinku"></label>
+      <button type="submit" class="btn btn-gold">Uđi</button>
+      <p class="note" id="loginMsg"></p>
+    </form>
+  </section>
+
+  <!-- Kalendar (vidljiv tek posle prijave) -->
+  <section class="form booking is-admin" id="panel" hidden>
+    <h3>Zauzeti termini</h3>
+    <p class="bk-help">Kliknite na dan: slobodan postaje zauzet (crven), a zauzet ponovo slobodan. Svaki dan je jedna noć (noć koja počinje tog datuma).</p>
+    <div class="cal">
+      <div class="cal-head">
+        <button type="button" class="cal-nav" id="calPrev" aria-label="Prethodni mesec">‹</button>
+        <div class="cal-title" id="calTitle" aria-live="polite"></div>
+        <button type="button" class="cal-nav" id="calNext" aria-label="Sledeći mesec">›</button>
+      </div>
+      <div class="cal-dow"><span>Pon</span><span>Uto</span><span>Sre</span><span>Čet</span><span>Pet</span><span>Sub</span><span>Ned</span></div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="cal-legend">
+      <span><i class="lg-free"></i>Slobodno</span>
+      <span><i class="lg-taken"></i>Zauzeto</span>
+    </div>
+    <p class="cal-msg" id="calMsg" role="status" aria-live="polite"></p>
+    <p class="ad-count" id="adCount"></p>
+    <div class="ad-out"><button type="button" class="btn btn-ghost" id="logout">Odjavi se</button></div>
+  </section>
+
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getFirestore, collection, doc, query, where, onSnapshot, setDoc, deleteDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+/* =====================================================================
+   1) LOZINKA ZA ADMIN: ovde je možeš promeniti (zameni tekst između navodnika)
+   Napomena: lozinka je vidljiva svakome ko otvori izvorni kod stranice,
+   pa je ovo samo "laka brava", ne prava zaštita.
+   ===================================================================== */
+const ADMIN_PASSWORD = "golden2026";     // <-- PROMENI OVDE
+
+/* =====================================================================
+   2) OVDE NALEPI firebaseConfig (isti kao u index.html)
+   ===================================================================== */
+const firebaseConfig = {
+  apiKey: "NALEPI_OVDE",
+  authDomain: "NALEPI_OVDE",
+  projectId: "NALEPI_OVDE",
+  storageBucket: "NALEPI_OVDE",
+  messagingSenderId: "NALEPI_OVDE",
+  appId: "NALEPI_OVDE"
+};
+const COLLECTION = "zauzeti_dani";
+const MAX_MONTHS_AHEAD = 24;
+/* ===================================================================== */
+
+const MONTHS = ["Januar","Februar","Mart","April","Maj","Jun","Jul","Avgust","Septembar","Oktobar","Novembar","Decembar"];
+const MONTHS_GEN = ["januara","februara","marta","aprila","maja","juna","jula","avgusta","septembra","oktobra","novembra","decembra"];
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, "0");
+const ymd = (y, m, d) => y + "-" + pad(m + 1) + "-" + pad(d);
+const longDate = k => { const p = k.split("-").map(Number); return p[2] + ". " + MONTHS_GEN[p[1] - 1] + " " + p[0] + "."; };
+
+const now = new Date();
+const todayKey = ymd(now.getFullYear(), now.getMonth(), now.getDate());
+let view = { y: now.getFullYear(), m: now.getMonth() };
+let taken = new Set(), ready = false, started = false, db = null;
+
+function setMsg(t, type) { const el = $("calMsg"); el.textContent = t || ""; el.className = "cal-msg" + (type ? " " + type : ""); }
+
+function render() {
+  const y = view.y, m = view.m;
+  $("calTitle").textContent = MONTHS[m] + " " + y;
+  const ahead = (y - now.getFullYear()) * 12 + (m - now.getMonth());
+  $("calPrev").disabled = ahead <= 0;
+  $("calNext").disabled = ahead >= MAX_MONTHS_AHEAD;
+  const lead = (new Date(y, m, 1).getDay() + 6) % 7;
+  const dim = new Date(y, m + 1, 0).getDate();
+  let html = "";
+  for (let i = 0; i < lead; i++) html += '<span class="day empty"></span>';
+  for (let d = 1; d <= dim; d++) {
+    const k = ymd(y, m, d);
+    const c = ["day"]; let dis = false, label = d + ". " + MONTHS_GEN[m] + " " + y + ". ";
+    if (k < todayKey) { c.push("past"); dis = true; label += "prošao datum"; }
+    else if (!ready) { c.push("wait"); dis = true; label += "učitavanje"; }
+    else if (taken.has(k)) { c.push("taken"); label += "zauzeto, kliknite da oslobodite"; }
+    else { c.push("free"); label += "slobodno, kliknite da zauzmete"; }
+    if (k === todayKey) c.push("today");
+    html += '<button type="button" class="' + c.join(" ") + '" data-k="' + k + '" aria-label="' + label + '"' + (dis ? " disabled" : "") + ">" + d + "</button>";
+  }
+  $("calGrid").innerHTML = html;
+  $("adCount").textContent = ready ? "Zauzetih noćenja od danas nadalje: " + taken.size : "";
+}
+
+$("calPrev").addEventListener("click", () => { view.m--; if (view.m < 0) { view.m = 11; view.y--; } render(); });
+$("calNext").addEventListener("click", () => { view.m++; if (view.m > 11) { view.m = 0; view.y++; } render(); });
+
+/* Klik na dan: slobodan -> upiši u Firebase (crven); zauzet -> obriši iz Firebase-a (slobodan) */
+$("calGrid").addEventListener("click", async e => {
+  const b = e.target.closest("button.day");
+  if (!b || b.disabled || !db) return;
+  const k = b.dataset.k;
+  try {
+    if (taken.has(k)) { await deleteDoc(doc(db, COLLECTION, k)); setMsg(longDate(k) + " je ponovo slobodan.", "ok"); }
+    else { await setDoc(doc(db, COLLECTION, k), { datum: k, izvor: "admin", kreirano: serverTimestamp() }); setMsg(longDate(k) + " je označen kao zauzet.", "ok"); }
+  } catch (err) {
+    console.error(err);
+    setMsg("Greška pri upisu u bazu. Proverite internet vezu i Firestore pravila.", "err");
+  }
+});
+
+function startCalendar() {
+  if (started) return; started = true;
+  const configured = !String(firebaseConfig.apiKey).startsWith("NALEPI") && !String(firebaseConfig.projectId).startsWith("NALEPI");
+  render();
+  if (!configured) { setMsg("Nedostaje firebaseConfig u kodu (admin.html).", "err"); return; }
+  try { db = getFirestore(initializeApp(firebaseConfig)); } catch (e) { console.error(e); setMsg("Greška pri povezivanju sa Firebase-om.", "err"); return; }
+  setMsg("Učitavam…");
+  onSnapshot(query(collection(db, COLLECTION), where("datum", ">=", todayKey)), snap => {
+    const s = new Set(); snap.forEach(d => s.add(d.id));
+    taken = s; ready = true;
+    if ($("calMsg").textContent === "Učitavam…") setMsg("");
+    render();
+  }, err => { console.error(err); setMsg("Ne mogu da učitam podatke. Proverite Firestore pravila (Rules).", "err"); });
+}
+
+function unlock() { $("login").hidden = true; $("panel").hidden = false; startCalendar(); }
+
+$("loginForm").addEventListener("submit", e => {
+  e.preventDefault();
+  if ($("pw").value === ADMIN_PASSWORD) {
+    try { sessionStorage.setItem("gw_admin", "1"); } catch (x) {}
+    $("pw").value = ""; $("loginMsg").textContent = ""; unlock();
+  } else { $("loginMsg").textContent = "Pogrešna lozinka."; $("pw").select(); }
+});
+$("logout").addEventListener("click", () => {
+  try { sessionStorage.removeItem("gw_admin"); } catch (x) {}
+  location.reload();
+});
+try { if (sessionStorage.getItem("gw_admin") === "1") unlock(); } catch (x) {}
+</script>
+</body>
+</html>

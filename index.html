@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Golden Wish Apartmani Zlatibor | Vaš odmor na Zlatiboru</title>
+<meta name="description" content="Golden Wish apartmani na Zlatiboru, Ćaldov put 14. Premium apartman za 1–4 osobe, bazen, restoran i spa u sklopu objekta, besplatna podzemna garaža. Rezervacije: 063 883 6376, 069 402 4419.">
+<meta name="theme-color" content="#0a0806">
+<meta property="og:title" content="Golden Wish Apartmani Zlatibor">
+<meta property="og:description" content="Vaš kutak mira na Zlatiboru. Priroda, luksuz, odmor.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== Kalendar rezervacija ===== */
+[hidden]{display:none!important}
+.booking{padding:clamp(18px,3.5vw,32px)}
+.bk-help{margin:-6px 0 14px;font-size:.86rem;color:var(--muted)}
+.cal{padding:14px;background:rgba(0,0,0,.3);border:1px solid rgba(217,171,79,.25);border-radius:16px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.cal-title{flex:1;text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:var(--gold-l)}
+.cal-nav{width:44px;height:44px;flex:none;display:grid;place-items:center;border:1px solid rgba(217,171,79,.5);border-radius:50%;color:var(--gold-l);font-size:1.6rem;line-height:1;transition:.3s}
+.cal-nav:hover:not(:disabled){background:rgba(217,171,79,.16);box-shadow:var(--glow)}
+.cal-nav:disabled{opacity:.25;cursor:not-allowed}
+.cal-dow,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-dow span{padding:4px 0;text-align:center;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.day{height:44px;display:grid;place-items:center;border:1px solid transparent;border-radius:10px;font-size:.92rem;font-variant-numeric:tabular-nums;transition:background .2s,transform .2s,box-shadow .2s}
+.day.empty{visibility:hidden}
+.day:disabled{cursor:not-allowed}
+.day.past,.day.wait{color:rgba(181,168,143,.28)}
+.day.free{background:rgba(88,190,128,.1);border-color:rgba(88,190,128,.38);color:#c4efd2}
+.day.free:hover{background:rgba(88,190,128,.24);transform:scale(1.06)}
+.day.taken{background:rgba(214,64,64,.2);border-color:rgba(214,64,64,.55);color:#ff9d9d;text-decoration:line-through}
+.day.can-out{cursor:pointer;border-style:dashed;border-color:var(--gold-l)}
+.day.can-out:hover{transform:scale(1.06)}
+.day.in-range{background:rgba(217,171,79,.22);border-color:rgba(217,171,79,.55);color:var(--gold-l)}
+.day.today{box-shadow:inset 0 0 0 1px var(--gold)}
+.day.sel{background:linear-gradient(135deg,#f4d98b,#d9ab4f);border-color:transparent;color:#1a1208;font-weight:600;text-decoration:none;box-shadow:0 0 16px rgba(217,171,79,.6)}
+.is-admin .day.taken{cursor:pointer}
+.is-admin .day.taken:hover{background:rgba(214,64,64,.38);transform:scale(1.06)}
+.cal-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:.74rem;color:var(--muted)}
+.cal-legend i{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-1px;border:1px solid;border-radius:4px}
+.lg-free{background:rgba(88,190,128,.25);border-color:rgba(88,190,128,.6)}
+.lg-taken{background:rgba(214,64,64,.35);border-color:rgba(214,64,64,.7)}
+.lg-sel{background:var(--gold);border-color:var(--gold-l)}
+.cal-msg{min-height:1.4em;margin-top:12px;font-size:.86rem;color:var(--gold-l)}
+.cal-msg.err{color:#ff9d9d}
+.cal-msg.ok{color:#9be3b5}
+.cal-sum{display:none;margin:10px 0 18px;padding:12px 14px;border:1px dashed rgba(217,171,79,.45);border-radius:12px;font-size:.88rem;line-height:1.6}
+.cal-sum.on{display:block}
+.cal-sum b{color:var(--gold-l);font-weight:600}
+.link-btn{margin-left:6px;font-size:.76rem;color:var(--gold);text-decoration:underline}
+.bk-form{margin-top:18px}
+.bk-form .btn{width:100%;margin-top:4px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.bk-done{text-align:center;padding:14px 0 4px}
+.bk-done .ok-ico{width:64px;height:64px;margin:0 auto 14px;display:grid;place-items:center;border:1.5px solid var(--gold);border-radius:50%;font-size:2rem;color:var(--gold-l);box-shadow:var(--glow)}
+.bk-done p{margin:8px 0;color:var(--text)}
+.bk-done a{color:var(--gold-l);text-decoration:underline}
+.bk-done .btn{margin-top:14px}
+@media (max-width:560px){
+  .cal{padding:10px}
+  .cal-dow,.cal-grid{gap:3px}
+  .day{height:40px;font-size:.86rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+  <div class="ld-half top"></div>
+  <div class="ld-half bottom"></div>
+  <div class="ld-glow"></div>
+  <svg class="ld-hills" viewBox="0 0 1200 300" preserveAspectRatio="none" aria-hidden="true">
+    <path class="p2" d="M0 250 L140 170 L240 215 L380 120 L500 205 L640 90 L780 195 L900 135 L1040 210 L1200 150"/>
+    <path d="M0 285 L120 225 L230 262 L370 190 L480 250 L620 160 L760 245 L890 200 L1030 258 L1200 215"/>
+  </svg>
+  <div class="ld-center">
+    <svg class="ld-emblem" viewBox="0 0 100 100" aria-hidden="true">
+      <defs><clipPath id="ldClip"><circle cx="50" cy="50" r="40"/></clipPath></defs>
+      <circle class="ld-orbit" cx="50" cy="50" r="49"/>
+      <circle class="ld-ring" cx="50" cy="50" r="48"/>
+      <g clip-path="url(#ldClip)">
+        <circle class="ld-sun" cx="50" cy="52" r="15"/>
+        <path class="ld-mt" d="M8 78 L32 50 L46 64 L62 44 L92 78 Z"/>
+      </g>
+    </svg>
+    <div class="ld-name" aria-label="Golden Wish">
+      <span class="ld-l" style="--i:0">G</span><span class="ld-l" style="--i:1">o</span><span class="ld-l" style="--i:2">l</span><span class="ld-l" style="--i:3">d</span><span class="ld-l" style="--i:4">e</span><span class="ld-l" style="--i:5">n</span><span class="ld-sp"></span><span class="ld-l w2" style="--i:6">w</span><span class="ld-l w2" style="--i:7">i</span><span class="ld-l w2" style="--i:8">s</span><span class="ld-l w2" style="--i:9">h</span>
+    </div>
+    <div class="ld-sub">Apartmani · Zlatibor</div>
+    <div class="ld-bar"><i id="ldBar"></i></div>
+    <div class="ld-pct" id="ldPct">0%</div>
+  </div>
+</div>
+
+<canvas id="sparkles" aria-hidden="true"></canvas>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<!-- Navigacija -->
+<header class="nav" id="nav">
+  <a href="#top" class="brand" aria-label="Golden Wish početna">
+    <span>Golden <em>wish</em></span>
+  </a>
+  <nav class="menu" id="menu">
+    <a href="#o-nama">O nama</a>
+    <a href="#pogodnosti">Pogodnosti</a>
+    <a href="#apartman">Apartman</a>
+    <a href="#restoran">Restoran</a>
+    <a href="#galerija">Galerija</a>
+    <a href="#lokacija">Lokacija</a>
+    <a href="#kontakt" class="menu-cta">Rezerviši</a>
+  </nav>
+  <button class="burger" id="burger" aria-label="Meni" aria-expanded="false"><span></span><span></span><span></span></button>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+  <canvas class="hero-sparkles" id="heroSparkles" aria-hidden="true"></canvas>
+  <div class="hero-content">
+    <div class="stars" aria-label="4 zvezdice">★ ★ ★ ★</div>
+    <p class="eyebrow reveal">Apartmani · Zlatibor</p>
+    <h1 class="reveal">
+      <span class="h1-top">Dobro došli u</span>
+      <span class="neon-title">Golden Wish</span>
+    </h1>
+    <p class="script reveal">Vaš odmor na Zlatiboru</p>
+    <p class="lead reveal">Priroda ~ luksuz ~ odmor. Jutra sa pogledom, večeri za pamćenje.</p>
+    <div class="hero-actions reveal">
+      <a href="#kontakt" class="btn btn-gold">Rezerviši boravak</a>
+      <a href="#galerija" class="btn btn-ghost">Pogledaj galeriju</a>
+    </div>
+  </div>
+  <a href="#o-nama" class="scroll-hint" aria-label="Skroluj dole"><span></span></a>
+</section>
+
+<!-- Traka sa brojevima -->
+<section class="strip">
+  <div class="strip-item reveal"><b>1–4</b><span>osobe</span></div>
+  <div class="strip-item reveal"><b>★★★★</b><span>premium smeštaj</span></div>
+  <div class="strip-item reveal"><b>24/7</b><span>podrška gostima</span></div>
+  <div class="strip-item reveal"><b>5 min</b><span>do centra</span></div>
+</section>
+
+<!-- O NAMA -->
+<section class="section" id="o-nama">
+  <div class="wrap two-col">
+    <div class="col-text">
+      <p class="eyebrow reveal">O nama</p>
+      <h2 class="reveal">Vaš kutak mira <span class="gold">na Zlatiboru</span></h2>
+      <div class="neon-line reveal"></div>
+      <p class="reveal">Golden Wish je mesto gde se luksuz susreće sa mirisom planinskog vazduha. Elegantno opremljen premium apartman, topla drvena enterijerska rešenja i pažljivo osmišljen detalj u svakom kutku stvaraju osećaj kao da ste došli kući, samo mnogo lepše.</p>
+      <p class="reveal">Bazen, restoran i spa u sklopu objekta, uz bezbedno parkiranje i svega nekoliko minuta lagane šetnje do centra Zlatibora, čine vaš boravak potpuno bezbrižnim.</p>
+      <a href="#kontakt" class="btn btn-gold reveal">Proverite slobodne termine</a>
+    </div>
+    <div class="col-media reveal">
+      <div class="frame glow-frame">
+        <div class="ph" data-label="Golden Wish">
+          <img src="ooo.png" alt="Golden Wish zgrada na Zlatiboru" loading="lazy" onerror="this.remove()">
+        </div>
+      </div>
+      <div class="badge-float"><span>Ćaldov put 14</span>Zlatibor</div>
+    </div>
+  </div>
+</section>
+
+<!-- POGODNOSTI -->
+<section class="section dark" id="pogodnosti">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow reveal">Sve na jednom mestu</p>
+      <h2 class="reveal">Pogodnosti <span class="gold">koje volite</span></h2>
+      <div class="neon-line center reveal"></div>
+    </div>
+    <div class="cards">
+      <article class="card reveal"><div class="ico"><svg viewBox="0 0 48 48"><path d="M4 32c4 0 4 3 8 3s4-3 8-3 4 3 8 3 4-3 8-3 4 3 8 3M4 40c4 0 4 3 8 3s4-3 8-3 4 3 8 3 4-3 8-3 4 3 8 3M16 26V10a4 4 0 0 1 8 0M30 26V10a4 4 0 0 1 8 0M16 16h14M16 22h14"/></svg></div><h3>Bazen</h3><p>Bazen u sklopu objekta za savršeno osveženje.</p></article>
+      <article class="card reveal"><div class="ico"><svg viewBox="0 0 48 48"><path d="M14 4v14a4 4 0 0 0 4 4v22M22 4v14M18 4v14M34 44V4c-6 4-8 12-8 20h8"/></svg></div><h3>Restoran</h3><p>Pažljivo birana ponuda jela i pića u sklopu objekta.</p></article>
+      <article class="card reveal"><div class="ico"><svg viewBox="0 0 48 48"><path d="M24 40c-10 0-16-6-16-14 8 0 16 2 16 14zM24 40c10 0 16-6 16-14-8 0-16 2-16 14zM24 40c-6-6-6-14 0-24 6 10 6 18 0 24z"/></svg></div><h3>Spa i wellness</h3><p>Spa i wellness centar za potpuni predah.</p></article>
+      <article class="card reveal"><div class="ico"><svg viewBox="0 0 48 48"><path d="M6 20c10-9 26-9 36 0M12 27c7-6 17-6 24 0M18 34c4-3 8-3 12 0"/><circle cx="24" cy="40" r="2"/></svg></div><h3>Besplatan Wi-Fi</h3><p>Brza internet veza u celom apartmanu.</p></article>
+      <article class="card reveal"><div class="ico"><svg viewBox="0 0 48 48"><rect x="8" y="6" width="32" height="36" rx="6"/><path d="M18 34V14h8a6 6 0 0 1 0 12h-8"/></svg></div><h3>Garaža i parking</h3><p>Besplatna podzemna garaža, obezbeđen parking.</p></article>
+      <article class="card reveal"><div class="ico"><svg viewBox="0 0 48 48"><path d="M8 40V10h32v30M8 22h32M16 10v12M32 10v12M14 30h4M14 35h4M22 30h12"/></svg></div><h3>Opremljena kuhinja</h3><p>Kompletno opremljena kuhinja za sve vaše potrebe.</p></article>
+      <article class="card reveal"><div class="ico"><svg viewBox="0 0 48 48"><circle cx="16" cy="16" r="6"/><circle cx="34" cy="18" r="5"/><path d="M4 40c0-8 5-13 12-13s12 5 12 13M28 40c0-6 3-10 8-10s8 4 8 10"/></svg></div><h3>Za 1–4 osobe</h3><p>Premium apartman, idealan za parove i porodice.</p></article>
+      <article class="card reveal"><div class="ico"><svg viewBox="0 0 48 48"><circle cx="26" cy="9" r="4"/><path d="M26 15l-6 10 8 6-2 12M20 25l-8 4M28 31l8 2M22 18l8 4"/></svg></div><h3>Blizu centra</h3><p>Nekoliko minuta lagane šetnje do centra Zlatibora.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- APARTMAN -->
+<section class="section" id="apartman">
+  <div class="wrap two-col reverse">
+    <div class="col-media reveal">
+      <div class="collage">
+        <div class="frame glow-frame c1"><div class="ph" data-label="Dnevna soba"><img src="TV.png" alt="Dnevna soba" loading="lazy" onerror="this.remove()"></div></div>
+        <div class="frame glow-frame c2"><div class="ph" data-label="Spavaća soba"><img src="KREVET.png" alt="Spavaća soba" loading="lazy" onerror="this.remove()"></div></div>
+      </div>
+    </div>
+    <div class="col-text">
+      <p class="eyebrow reveal">Premium apartman</p>
+      <h2 class="reveal">Udobnost koja <span class="gold">ostavlja bez daha</span></h2>
+      <div class="neon-line reveal"></div>
+      <p class="reveal">Topli drveni paneli, mekani tonovi bež boje i elegantne detalje daju prostoru toplinu planinske kuće i sofisticiranost luksuznog hotela. Dnevna soba sa kuhinjom, udoban bračni krevet, moderno kupatilo sa tuš kabinom, sve je tu da se osećate savršeno.</p>
+      <ul class="ticks reveal">
+        <li>Dnevni boravak sa televizorom i sofom na razvlačenje</li>
+        <li>Spavaća soba sa velikim ogledalom i bračnim krevetom</li>
+        <li>Moderno kupatilo sa tuš kabinom</li>
+        <li>Potpuno opremljena kuhinja sa trpezarijom</li>
+        <li>Kapacitet do 4 osobe</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- RESTORAN -->
+<section class="section dark restoran" id="restoran">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow reveal">U sklopu objekta</p>
+      <h2 class="reveal">Ukus koji <span class="gold">upotpunjuje vaš boravak</span></h2>
+      <div class="neon-line center reveal"></div>
+    </div>
+    <div class="rest-grid">
+      <div class="frame glow-frame tall reveal"><div class="ph" data-label="Restoran"><img src="restoran.png" alt="Enterijer restorana" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="rest-info">
+        <div class="rest-item reveal"><b>01</b><div><h3>Pažljivo birana ponuda</h3><p>Jela i pića odabrani da zadovolje svaki ukus.</p></div></div>
+        <div class="rest-item reveal"><b>02</b><div><h3>Prijatan ambijent</h3><p>Topla atmosfera kamena i drveta, za svaku priliku.</p></div></div>
+        <div class="rest-item reveal"><b>03</b><div><h3>Doručak, ručak, večera</h3><p>Kao i posebni trenuci koje želite da zapamtite.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIJA -->
+<section class="section" id="galerija">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow reveal">Galerija</p>
+      <h2 class="reveal">Pogledajte <span class="gold">Golden Wish</span></h2>
+      <div class="neon-line center reveal"></div>
+    </div>
+    <div class="filters reveal" id="filters">
+      <button class="chip active" data-f="all">Sve</button>
+      <button class="chip" data-f="apartman">Apartman</button>
+      <button class="chip" data-f="restoran">Restoran</button>
+      <button class="chip" data-f="spoljasnjost">Spoljašnjost</button>
+    </div>
+    <div class="gallery" id="gallery">
+      <figure class="g-item big" data-cat="apartman"><div class="ph" data-label="Dnevna soba"><img src="TV.png" alt="Dnevna soba" loading="lazy" onerror="this.remove()"></div><figcaption>Dnevna soba</figcaption></figure>
+      <figure class="g-item" data-cat="apartman"><div class="ph" data-label="Kuhinja"><img src="KUHINJA.png" alt="Kuhinja i trpezarija" loading="lazy" onerror="this.remove()"></div><figcaption>Kuhinja i trpezarija</figcaption></figure>
+      <figure class="g-item" data-cat="apartman"><div class="ph" data-label="Spavaća soba"><img src="KREVET.png" alt="Spavaća soba" loading="lazy" onerror="this.remove()"></div><figcaption>Spavaća soba</figcaption></figure>
+      <figure class="g-item" data-cat="apartman"><div class="ph" data-label="Kupatilo"><img src="VC.png" alt="Kupatilo" loading="lazy" onerror="this.remove()"></div><figcaption>Kupatilo</figcaption></figure>
+      <figure class="g-item big" data-cat="restoran"><div class="ph" data-label="Restoran"><img src="VRATA.png" alt="Restoran" loading="lazy" onerror="this.remove()"></div><figcaption>Restoran</figcaption></figure>
+      <figure class="g-item" data-cat="restoran"><div class="ph" data-label="Bar"><img src="TV2.png" alt="" loading="lazy" onerror="this.remove()"></div><figcaption>Bar</figcaption></figure>
+      <figure class="g-item" data-cat="restoran"><div class="ph" data-label="Postavka stola"><img src="restoran.png" alt="Postavljen sto" loading="lazy" onerror="this.remove()"></div><figcaption>Postavka stola</figcaption></figure>
+      <figure class="g-item" data-cat="restoran"><div class="ph" data-label="Vinoteka"><img src="vino.png" alt="Vinoteka" loading="lazy" onerror="this.remove()"></div><figcaption>Vinoteka</figcaption></figure>
+      <figure class="g-item big" data-cat="spoljasnjost"><div class="ph" data-label="Golden Wish"><img src="lokacia2.png" alt="Pogled na zgradu" loading="lazy" onerror="this.remove()"></div><figcaption>Pogled iz vazduha</figcaption></figure>
+      <figure class="g-item" data-cat="spoljasnjost"><div class="ph" data-label="Zlatibor"><img src="noc.png" alt="Zlatibor panorama" loading="lazy" onerror="this.remove()"></div><figcaption>Zlatibor</figcaption></figure>
+    </div>
+    <div class="ig-cta reveal">
+      <p>Još fotografija i utisaka gostiju pratite na našem Instagramu</p>
+      <a class="btn btn-ghost" href="https://www.instagram.com/goldenwishzlatibor/" target="_blank" rel="noopener">@goldenwishzlatibor</a>
+    </div>
+  </div>
+</section>
+
+<!-- LOKACIJA -->
+<section class="section dark" id="lokacija">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow reveal">Lokacija</p>
+      <h2 class="reveal">Pronađite nas <span class="gold">na Zlatiboru</span></h2>
+      <div class="neon-line center reveal"></div>
+      <p class="sub reveal">Ćaldov put 14, Zlatibor, Srbija. Svega nekoliko minuta lagane šetnje do centra.</p>
+    </div>
+    <div class="map-wrap glow-frame reveal">
+      <iframe title="Golden Wish na Google mapi" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=%C4%86aldov%20put%2014%2C%20Zlatibor%2C%20Srbija&output=embed"></iframe>
+    </div>
+    <div class="center-row reveal">
+      <a class="btn btn-gold" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=%C4%86aldov%20put%2014%2C%20Zlatibor%2C%20Srbija">Navigacija do nas</a>
+      <a class="btn btn-ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%C4%86aldov%20put%2014%2C%20Zlatibor%2C%20Srbija">Otvori u Google Maps</a>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section class="section" id="kontakt">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow reveal">Rezervacije</p>
+      <h2 class="reveal">Rezervišite <span class="gold">svoj odmor</span></h2>
+      <div class="neon-line center reveal"></div>
+      <p class="sub reveal">Izaberite slobodan termin u kalendaru ili nas pozovite. Odgovaramo brzo.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-cards">
+        <a class="c-card reveal" href="tel:+381638836376"><span class="c-ico">☎</span><div><small>Pozovite</small><b>063 883 6376</b></div></a>
+        <a class="c-card reveal" href="tel:+381694024419"><span class="c-ico">☎</span><div><small>Pozovite</small><b>069 402 4419</b></div></a>
+        <a class="c-card reveal" href="https://www.instagram.com/goldenwishzlatibor/" target="_blank" rel="noopener"><span class="c-ico">◎</span><div><small>Instagram</small><b>@goldenwishzlatibor</b></div></a>
+        <div class="c-card reveal"><span class="c-ico">⌖</span><div><small>Adresa</small><b>Ćaldov put 14, Zlatibor</b></div></div>
+      </div>
+      <div class="form booking reveal" id="booking">
+        <h3>Izaberite termin</h3>
+        <p class="bk-help">Kliknite na datum dolaska, pa na datum odlaska.</p>
+        <div class="cal" id="cal">
+          <div class="cal-head">
+            <button type="button" class="cal-nav" id="calPrev" aria-label="Prethodni mesec">‹</button>
+            <div class="cal-title" id="calTitle" aria-live="polite"></div>
+            <button type="button" class="cal-nav" id="calNext" aria-label="Sledeći mesec">›</button>
+          </div>
+          <div class="cal-dow"><span>Pon</span><span>Uto</span><span>Sre</span><span>Čet</span><span>Pet</span><span>Sub</span><span>Ned</span></div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+        <div class="cal-legend">
+          <span><i class="lg-free"></i>Slobodno</span>
+          <span><i class="lg-taken"></i>Zauzeto</span>
+          <span><i class="lg-sel"></i>Vaš izbor</span>
+        </div>
+        <p class="cal-msg" id="calMsg" role="status" aria-live="polite"></p>
+        <div class="cal-sum" id="calSum"></div>
+
+        <form class="bk-form" id="bkForm" novalidate>
+          <label>Ime i prezime<input type="text" id="bkName" placeholder="Vaše ime i prezime" autocomplete="name"></label>
+          <label>Broj telefona<input type="tel" id="bkPhone" placeholder="npr. 063 123 4567" autocomplete="tel"></label>
+          <label>Broj osoba
+            <select id="bkGuests"><option>1</option><option selected>2</option><option>3</option><option>4</option></select>
+          </label>
+          <div class="hp" aria-hidden="true"><label>Ne popunjavati<input type="text" id="bkWebsite" tabindex="-1" autocomplete="off"></label></div>
+          <button type="submit" class="btn btn-gold" id="bkSubmit">Pošalji rezervaciju</button>
+        </form>
+        <div class="bk-done" id="bkDone" hidden></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap foot-in">
+    <div class="foot-brand">
+      <div class="neon-title sm">Golden Wish</div>
+      <p class="script small">Vaš odmor na Zlatiboru</p>
+    </div>
+    <div class="foot-links">
+      <a href="#o-nama">O nama</a><a href="#apartman">Apartman</a><a href="#galerija">Galerija</a><a href="#lokacija">Lokacija</a><a href="#kontakt">Kontakt</a>
+    </div>
+    <div class="foot-social">
+      <a href="https://www.instagram.com/goldenwishzlatibor/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+      </a>
+      <a href="tel:+381638836376" aria-label="Pozovi">
+        <svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+      </a>
+    </div>
+  </div>
+  <p class="copy">© <span id="year"></span> Golden Wish Apartmani Zlatibor. Sva prava zadržana.</p>
+</footer>
+
+<!-- Plutajuće dugme za poziv -->
+<a href="tel:+381638836376" class="fab" aria-label="Pozovi za rezervaciju">
+  <svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+</a>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lb-close" id="lbClose" aria-label="Zatvori">×</button>
+  <button class="lb-nav prev" id="lbPrev" aria-label="Prethodna">‹</button>
+  <div class="lb-stage" id="lbStage"></div>
+  <button class="lb-nav next" id="lbNext" aria-label="Sledeća">›</button>
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getFirestore, collection, doc, query, where, onSnapshot, runTransaction, writeBatch, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+/* =====================================================================
+   1) OVDE NALEPI firebaseConfig  (Firebase Console -> Project settings -> Your apps)
+   Zameni ceo blok ispod onim što ti Firebase prikaže.
+   ===================================================================== */
+const firebaseConfig = {
+  apiKey: "NALEPI_OVDE",
+  authDomain: "NALEPI_OVDE",
+  projectId: "NALEPI_OVDE",
+  storageBucket: "NALEPI_OVDE",
+  messagingSenderId: "NALEPI_OVDE",
+  appId: "NALEPI_OVDE"
+};
+
+/* =====================================================================
+   2) OVDE NALEPI EmailJS ključeve (emailjs.com)
+   ===================================================================== */
+const EMAILJS_PUBLIC_KEY  = "mGurYyfO_0S5AJZj0";   // Account -> General -> Public Key
+const EMAILJS_SERVICE_ID  = "service_m1vbrz7";   // Email Services -> Service ID
+const EMAILJS_TEMPLATE_ID = "template_q3gu1bg";   // Email Templates -> Template ID
+
+/* 3) Podešavanja (možeš da menjaš) */
+const MAX_NIGHTS = 30;          // najviše noćenja u jednoj rezervaciji
+const MAX_MONTHS_AHEAD = 18;    // koliko meseci unapred gost može da lista
+const COLLECTION = "zauzeti_dani";
+const PHONE_TEXT = "063 883 6376";
+/* ===================================================================== */
+
+const MONTHS = ["Januar","Februar","Mart","April","Maj","Jun","Jul","Avgust","Septembar","Oktobar","Novembar","Decembar"];
+const MONTHS_GEN = ["januara","februara","marta","aprila","maja","juna","jula","avgusta","septembra","oktobra","novembra","decembra"];
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, "0");
+const ymd = (y, m, d) => y + "-" + pad(m + 1) + "-" + pad(d);            // m je 0-11
+const parseKey = k => { const p = k.split("-").map(Number); return new Date(Date.UTC(p[0], p[1] - 1, p[2])); };
+const addDays = (k, n) => { const d = parseKey(k); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+const diffDays = (a, b) => Math.round((parseKey(b) - parseKey(a)) / 864e5);
+const longDate = k => { const p = k.split("-").map(Number); return p[2] + ". " + MONTHS_GEN[p[1] - 1] + " " + p[0] + "."; };
+const shortDate = k => { const p = k.split("-"); return p[2] + "." + p[1] + "." + p[0] + "."; };
+const nightsWord = n => (n % 10 === 1 && n % 100 !== 11) ? "noćenje" : "noćenja";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+const now = new Date();
+const todayKey = ymd(now.getFullYear(), now.getMonth(), now.getDate());   // lokalni datum, bez UTC grešaka
+let view = { y: now.getFullYear(), m: now.getMonth() };
+let taken = new Set(), ready = false, checkIn = null, checkOut = null;
+
+/* ---------- Firebase ---------- */
+const configured = !String(firebaseConfig.apiKey).startsWith("NALEPI") && !String(firebaseConfig.projectId).startsWith("NALEPI");
+let db = null;
+if (configured) { try { db = getFirestore(initializeApp(firebaseConfig)); } catch (e) { console.error(e); } }
+
+function setMsg(t, type) { const el = $("calMsg"); el.textContent = t || ""; el.className = "cal-msg" + (type ? " " + type : ""); }
+
+/* ---------- Pomoćne funkcije za zauzete dane ---------- */
+function nightsFree(a, b) { for (const t of taken) { if (t >= a && t < b) return false; } return true; }   // noći od a do dan pre b
+function nextTakenAfter(k) { let best = null; for (const t of taken) { if (t > k && (best === null || t < best)) best = t; } return best; }
+
+/* ---------- Crtanje kalendara ---------- */
+function render() {
+  const y = view.y, m = view.m;
+  $("calTitle").textContent = MONTHS[m] + " " + y;
+  const ahead = (y - now.getFullYear()) * 12 + (m - now.getMonth());
+  $("calPrev").disabled = ahead <= 0;
+  $("calNext").disabled = ahead >= MAX_MONTHS_AHEAD;
+  const lead = (new Date(y, m, 1).getDay() + 6) % 7;          // ponedeljak je prvi dan
+  const dim = new Date(y, m + 1, 0).getDate();
+  const outDay = (checkIn && !checkOut) ? nextTakenAfter(checkIn) : null;   // zauzet dan na koji gost sme da ode (odlazak)
+  let html = "";
+  for (let i = 0; i < lead; i++) html += '<span class="day empty"></span>';
+  for (let d = 1; d <= dim; d++) {
+    const k = ymd(y, m, d);
+    const c = ["day"]; let dis = false, label = d + ". " + MONTHS_GEN[m] + " " + y + ". ";
+    if (k < todayKey) { c.push("past"); dis = true; label += "prošao datum"; }
+    else if (!ready) { c.push("wait"); dis = true; label += "učitavanje"; }
+    else if (taken.has(k)) {
+      c.push("taken");
+      if (k === outDay) { c.push("can-out"); label += "zauzeto, ali možete odjaviti"; } else { dis = true; label += "zauzeto"; }
+    } else { c.push("free"); label += "slobodno"; }
+    if (k === todayKey) c.push("today");
+    if (k === checkIn || k === checkOut) c.push("sel");
+    else if (checkIn && checkOut && k > checkIn && k < checkOut) c.push("in-range");
+    html += '<button type="button" class="' + c.join(" ") + '" data-k="' + k + '" aria-label="' + label + '"' + (dis ? " disabled" : "") + ">" + d + "</button>";
+  }
+  $("calGrid").innerHTML = html;
+}
+
+function updateSummary() {
+  const el = $("calSum");
+  if (!checkIn) { el.className = "cal-sum"; el.innerHTML = ""; render(); return; }
+  let h = "Dolazak: <b>" + longDate(checkIn) + "</b>";
+  if (checkOut) { const n = diffDays(checkIn, checkOut); h += " &nbsp;→&nbsp; Odlazak: <b>" + longDate(checkOut) + "</b><br><b>" + n + " " + nightsWord(n) + "</b>"; }
+  else h += "<br>Sada izaberite datum odlaska.";
+  h += ' <button type="button" class="link-btn" id="calReset">Poništi izbor</button>';
+  el.className = "cal-sum on"; el.innerHTML = h; render();
+}
+
+function resetSel(msg, type) { checkIn = checkOut = null; setMsg(msg, type); updateSummary(); }
+
+/* ---------- Biranje datuma ---------- */
+function pick(k) {
+  setMsg("");
+  if (!checkIn || checkOut) { checkIn = k; checkOut = null; }
+  else if (k === checkIn) { checkIn = null; }
+  else if (k < checkIn) { checkIn = k; }
+  else {
+    if (!nightsFree(checkIn, k)) { resetSel("Izabrani period nije slobodan: između datuma postoji zauzet dan. Molimo izaberite druge datume.", "err"); return; }
+    const n = diffDays(checkIn, k);
+    if (n > MAX_NIGHTS) { resetSel("Najduži boravak preko sajta je " + MAX_NIGHTS + " noćenja. Za duži boravak pozovite " + PHONE_TEXT + ".", "err"); return; }
+    checkOut = k;
+  }
+  updateSummary();
+}
+
+/* Ako je neko u međuvremenu zauzeo izabrane dane (stiže uživo iz Firebase-a) */
+function revalidate() {
+  if (!checkIn) return;
+  if (!nightsFree(checkIn, checkOut || addDays(checkIn, 1))) resetSel("Izabrani termin je u međuvremenu zauzet. Molimo izaberite drugi.", "err");
+}
+
+$("calGrid").addEventListener("click", e => { const b = e.target.closest("button.day"); if (b && !b.disabled) pick(b.dataset.k); });
+$("calSum").addEventListener("click", e => { if (e.target.id === "calReset") resetSel(""); });
+$("calPrev").addEventListener("click", () => { view.m--; if (view.m < 0) { view.m = 11; view.y--; } render(); });
+$("calNext").addEventListener("click", () => { view.m++; if (view.m > 11) { view.m = 0; view.y++; } render(); });
+
+/* ---------- Učitavanje zauzetih dana (uživo) ---------- */
+render();
+if (db) {
+  setMsg("Učitavam zauzete termine…");
+  onSnapshot(query(collection(db, COLLECTION), where("datum", ">=", todayKey)), snap => {
+    const s = new Set(); snap.forEach(d => s.add(d.id));
+    taken = s;
+    if (!ready) { ready = true; setMsg(""); }
+    revalidate(); render();
+  }, err => {
+    console.error(err);
+    setMsg("Kalendar trenutno nije dostupan. Molimo pozovite nas na " + PHONE_TEXT + ".", "err");
+  });
+} else {
+  setMsg("Kalendar još nije povezan sa bazom (nedostaje firebaseConfig u kodu).", "err");
+}
+
+/* ---------- Slanje rezervacije ---------- */
+$("bkForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if ($("bkWebsite").value) return;                                   // zamka za botove
+  const ime = $("bkName").value.trim(), tel = $("bkPhone").value.trim(), osoba = $("bkGuests").value;
+  if (!db || !ready) { setMsg("Rezervacioni sistem trenutno nije dostupan. Pozovite nas na " + PHONE_TEXT + ".", "err"); return; }
+  if (!checkIn || !checkOut) { setMsg("Prvo izaberite datum dolaska i odlaska u kalendaru.", "err"); $("cal").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+  if (ime.length < 3) { setMsg("Molimo upišite ime i prezime.", "err"); $("bkName").focus(); return; }
+  if (!/^\+?\d{6,15}$/.test(tel.replace(/[\s\-\/().]/g, ""))) { setMsg("Molimo upišite ispravan broj telefona.", "err"); $("bkPhone").focus(); return; }
+
+  const od = checkIn, doo = checkOut, n = diffDays(od, doo);
+  const nights = []; for (let i = 0; i < n; i++) nights.push(addDays(od, i));   // od check-in do dan pre check-out
+  const btn = $("bkSubmit"); btn.disabled = true; btn.textContent = "Šaljem…"; setMsg("");
+  let written = false;
+  try {
+    // 1) provera + 2) upis svake noći, u jednoj transakciji (ako je bilo koja noć u međuvremenu zauzeta, ništa se ne upisuje)
+    await runTransaction(db, async tx => {
+      const refs = nights.map(k => doc(db, COLLECTION, k));
+      const snaps = await Promise.all(refs.map(r => tx.get(r)));
+      if (snaps.some(s => s.exists())) throw new Error("TAKEN");
+      refs.forEach((r, i) => tx.set(r, { datum: nights[i], izvor: "sajt", kreirano: serverTimestamp() }));
+    });
+    written = true;
+    // 3) slanje mejla vlasniku
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      ime: ime, telefon: tel, broj_osoba: osoba,
+      dolazak: shortDate(od), odlazak: shortDate(doo), nocenja: n,
+      datumi: shortDate(od) + " – " + shortDate(doo) + " (" + n + " " + nightsWord(n) + ")"
+    }, { publicKey: EMAILJS_PUBLIC_KEY });
+    // 4) potvrda gostu
+    showDone(ime, tel, od, doo, n);
+    checkIn = checkOut = null; setMsg(""); updateSummary();
+  } catch (err) {
+    console.error(err);
+    if (err && err.message === "TAKEN") {
+      resetSel("Nažalost, neko je u međuvremenu rezervisao deo ovog termina. Molimo izaberite druge datume.", "err");
+    } else if (written) {
+      try {   // mejl nije poslat: vraćamo dane u slobodno da gost ne bude u zabludi
+        const b = writeBatch(db); nights.forEach(k => b.delete(doc(db, COLLECTION, k))); await b.commit();
+        setMsg("Slanje rezervacije nije uspelo i termin nije zauzet. Pokušajte ponovo ili pozovite " + PHONE_TEXT + ".", "err");
+      } catch (e2) {
+        console.error(e2);
+        setMsg("Termin je zabeležen, ali obaveštenje nije poslato. Molimo pozovite " + PHONE_TEXT + " da potvrdimo rezervaciju.", "err");
+      }
+    } else {
+      setMsg("Došlo je do greške pri proveri termina. Pokušajte ponovo ili pozovite " + PHONE_TEXT + ".", "err");
+    }
+  } finally { btn.disabled = false; btn.textContent = "Pošalji rezervaciju"; }
+});
+
+function showDone(ime, tel, od, doo, n) {
+  $("bkForm").hidden = true;
+  const box = $("bkDone");
+  box.innerHTML = '<div class="ok-ico">✓</div><h3>Hvala, ' + esc(ime) + '!</h3>' +
+    '<p>Vaša rezervacija je poslata i termin je zabeležen:</p>' +
+    '<p><b>' + longDate(od) + ' → ' + longDate(doo) + '</b><br>' + n + ' ' + nightsWord(n) + '</p>' +
+    '<p>Kontaktiraćemo vas na broj <b>' + esc(tel) + '</b> radi potvrde. Za sve informacije pozovite <a href="tel:+381638836376">' + PHONE_TEXT + '</a>.</p>' +
+    '<button type="button" class="btn btn-ghost" id="bkAgain">Nova rezervacija</button>';
+  box.hidden = false;
+  box.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+$("bkDone").addEventListener("click", e => {
+  if (e.target.id !== "bkAgain") return;
+  $("bkForm").reset(); $("bkDone").hidden = true; $("bkForm").hidden = false; setMsg("");
+});
+</script>
+</body>
+</html>
