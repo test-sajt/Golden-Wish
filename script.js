@@ -86,6 +86,8 @@
   var nav = document.getElementById('nav');
   var burger = document.getElementById('burger');
   var menu = document.getElementById('menu');
+  var menuOpen = false;
+  var MOBILE_MAX = 820;                          // isto kao breakpoint u style.css
 
   function onScroll() {
     nav.classList.toggle('scrolled', window.scrollY > 40);
@@ -93,21 +95,66 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  function closeMenu() {
-    burger.classList.remove('open');
-    menu.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-  }
-  burger.addEventListener('click', function () {
-    var open = !menu.classList.contains('open');
+  function setMenu(open) {
+    menuOpen = open;
     menu.classList.toggle('open', open);
     burger.classList.toggle('open', open);
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     document.body.style.overflow = open ? 'hidden' : '';
+  }
+  burger.addEventListener('click', function () { setMenu(!menuOpen); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menuOpen) setMenu(false);
   });
-  menu.addEventListener('click', function (e) {
-    if (e.target.tagName === 'A') closeMenu();
+  window.addEventListener('resize', function () {
+    if (menuOpen && window.innerWidth > MOBILE_MAX) setMenu(false);
+  });
+
+  // Glatko skrolovanje do sekcije (umesto "teleportovanja")
+  // Cilj se računa u svakom frejmu, pa slike koje se tek učitavaju ne mogu da pomere odredište.
+  var scrollAnim = null;
+  function absTop(el) { var y = 0; while (el) { y += el.offsetTop; el = el.offsetParent; } return y; }
+  function cancelScroll() { if (scrollAnim) { cancelAnimationFrame(scrollAnim.raf); scrollAnim = null; } }
+  ['wheel', 'touchstart', 'mousedown', 'keydown'].forEach(function (ev) {
+    window.addEventListener(ev, cancelScroll, { passive: true });
+  });
+
+  function scrollToEl(el, offset, done) {
+    cancelScroll();
+    function target() { return Math.max(0, absTop(el) - offset); }
+    var from = window.scrollY;
+    var dist = Math.abs(target() - from);
+    if (reduceMotion || dist < 4) { window.scrollTo(0, target()); if (done) done(); return; }
+    var dur = Math.min(1500, Math.max(600, 380 + dist * 0.22));
+    var t0 = performance.now();
+    var anim = { raf: 0 };
+    scrollAnim = anim;
+    (function step(now) {
+      var k = Math.min((now - t0) / dur, 1);
+      var e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;   // easeInOutCubic
+      window.scrollTo(0, from + (target() - from) * e);
+      if (k < 1) { anim.raf = requestAnimationFrame(step); }
+      else { scrollAnim = null; if (done) done(); }
+    })(t0);
+  }
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var hash = a.getAttribute('href');
+    if (!hash || hash.length < 2) return;
+    var el = document.getElementById(hash.slice(1));
+    if (!el) return;
+    e.preventDefault();
+    if (menuOpen) setMenu(false);
+    var isBooking = el.id === 'booking';
+    var offset = el.id === 'top' ? 0 : (isBooking ? 92 : 0);
+    scrollToEl(el, offset, isBooking ? function () {
+      el.classList.remove('ping');
+      void el.offsetWidth;                       // restart animacije
+      el.classList.add('ping');
+      setTimeout(function () { el.classList.remove('ping'); }, 1800);
+    } : null);
   });
 
   // Reveal animacije
