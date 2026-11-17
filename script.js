@@ -8,15 +8,35 @@
   var yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Loader
+  // Loader: sunce izlazi iza brda, iskra prati liniju, naziv se "pali"
   var loaderEl = document.getElementById('loader');
-  var ldBar = document.getElementById('ldBar');
-  var ldPct = document.getElementById('ldPct');
+  var ldRidge = document.getElementById('ldRidge');
+  var ldLitRect = document.getElementById('ldLitRect');
+  var ldSpark = document.getElementById('ldSpark');
+  var ldSun = document.getElementById('ldSun');
+  var ldFillSolid = document.getElementById('ldFillSolid');
+  var ldFillEdge = document.getElementById('ldFillEdge');
+  var ldLen = (ldRidge && ldRidge.getTotalLength) ? ldRidge.getTotalLength() : 0;
   var pageLoaded = document.readyState === 'complete';
   var loaderDone = false;
   var ldStart = performance.now();
-  var LD_MIN = 3200; // minimalno trajanje da se vidi cela animacija
+  var LD_MIN = reduceMotion ? 900 : 3000; // minimalno trajanje (ms), promeni ako želiš brže/sporije
   document.body.style.overflow = 'hidden';
+
+  function ldSet(p) {
+    loaderEl.style.setProperty('--p', p.toFixed(4));
+    if (!ldLen) return;
+    var pt = ldRidge.getPointAtLength(p * ldLen);
+    var x = pt.x;
+    ldLitRect.setAttribute('width', Math.max(0, x + 400));
+    ldSpark.setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + pt.y.toFixed(1) + ')');
+    var mx = x + 90 * p;                       // meka ivica svetla ispod linije
+    ldFillSolid.setAttribute('width', Math.max(0, mx - 90 + 400));
+    ldFillEdge.setAttribute('x', (mx - 90).toFixed(1));
+    var e = p * p * (3 - 2 * p);               // izlazak sunca (smoothstep)
+    ldSun.setAttribute('transform', 'translate(0 ' + (-112 * e).toFixed(1) + ')');
+  }
+  ldSet(0);
 
   function hideLoader() {
     if (loaderDone) return;
@@ -31,15 +51,12 @@
     var t = Math.min((now - ldStart) / LD_MIN, 1);
     var p = 1 - Math.pow(1 - t, 2.2);
     // ne ide preko 96% dok se stranica ne učita
-    var shown = (pageLoaded || t < 1) ? p : 0.96;
-    if (!pageLoaded && shown > 0.96) shown = 0.96;
-    var pct = Math.round(shown * 100);
-    if (ldBar) ldBar.style.width = pct + '%';
-    if (ldPct) ldPct.textContent = pct + '%';
+    if (!pageLoaded && p > 0.96) p = 0.96;
+    ldSet(p);
     if (t >= 1 && pageLoaded) {
-      if (ldBar) ldBar.style.width = '100%';
-      if (ldPct) ldPct.textContent = '100%';
-      setTimeout(hideLoader, 450);
+      ldSet(1);
+      loaderEl.classList.add('is-done');
+      setTimeout(hideLoader, 750);
       return;
     }
     requestAnimationFrame(ldTick);
