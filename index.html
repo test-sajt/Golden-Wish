@@ -1,14 +1,103 @@
 <!DOCTYPE html>
-<html lang="sr">
+<html lang="sr-Latn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Golden Wish Apartmani Zlatibor | Vaš odmor na Zlatiboru</title>
-<meta name="description" content="Golden Wish apartmani na Zlatiboru, Ćaldov put 14. Premium apartman za 1–4 osobe, bazen, restoran i spa u sklopu objekta, besplatna podzemna garaža. Rezervacije: 063 883 6376, 069 402 4419.">
+<title>Apartmani Zlatibor | Golden Wish – bazen, spa i garaža</title>
+<meta name="description" content="Premium apartman na Zlatiboru, Ćaldov put 14: bazen, spa, restoran i besplatna garaža, 5 min do centra. Za 1–4 osobe. Rezervišite termin online.">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#0a0806">
-<meta property="og:title" content="Golden Wish Apartmani Zlatibor">
-<meta property="og:description" content="Vaš kutak mira na Zlatiboru. Priroda, luksuz, odmor.">
+<link rel="canonical" href="https://test-sajt.github.io/Golden-Wish/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Golden Wish Apartmani Zlatibor">
+<meta property="og:locale" content="sr_RS">
+<meta property="og:title" content="Golden Wish – Apartmani Zlatibor">
+<meta property="og:description" content="Vaš kutak mira na Zlatiboru: premium apartman, bazen, spa, restoran i besplatna garaža. Rezervišite online.">
+<meta property="og:url" content="https://test-sajt.github.io/Golden-Wish/">
+<meta property="og:image" content="https://test-sajt.github.io/Golden-Wish/ooo.png">
+<meta property="og:image:alt" content="Golden Wish apartmani na Zlatiboru, Ćaldov put 14">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Golden Wish – Apartmani Zlatibor">
+<meta name="twitter:description" content="Premium apartman na Zlatiboru sa bazenom, spa centrom, restoranom i besplatnom garažom.">
+<meta name="twitter:image" content="https://test-sajt.github.io/Golden-Wish/ooo.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LodgingBusiness",
+  "name": "Golden Wish Apartmani Zlatibor",
+  "description": "Premium apartman za 1–4 osobe na Zlatiboru, Ćaldov put 14. Bazen, spa i wellness, restoran, besplatna podzemna garaža i svega nekoliko minuta šetnje do centra.",
+  "url": "https://test-sajt.github.io/Golden-Wish/",
+  "image": [
+    "https://test-sajt.github.io/Golden-Wish/ooo.png",
+    "https://test-sajt.github.io/Golden-Wish/TV.png",
+    "https://test-sajt.github.io/Golden-Wish/KREVET.png",
+    "https://test-sajt.github.io/Golden-Wish/restoran.png"
+  ],
+  "telephone": "+381638836376",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Ćaldov put 14",
+    "addressLocality": "Zlatibor",
+    "addressCountry": "RS"
+  },
+  "hasMap": "https://www.google.com/maps/search/?api=1&query=%C4%86aldov%20put%2014%2C%20Zlatibor%2C%20Srbija",
+  "sameAs": [
+    "https://www.instagram.com/goldenwishzlatibor/"
+  ],
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+381638836376",
+      "contactType": "reservations",
+      "availableLanguage": [
+        "sr"
+      ]
+    },
+    {
+      "@type": "ContactPoint",
+      "telephone": "+381694024419",
+      "contactType": "reservations",
+      "availableLanguage": [
+        "sr"
+      ]
+    }
+  ],
+  "amenityFeature": [
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Bazen",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Spa i wellness",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Restoran",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Besplatan Wi-Fi",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Besplatna podzemna garaža",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Potpuno opremljena kuhinja",
+      "value": true
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -184,7 +273,7 @@
     <a href="#restoran">Restoran</a>
     <a href="#galerija">Galerija</a>
     <a href="#lokacija">Lokacija</a>
-    <a href="#kontakt" class="menu-cta">Rezerviši</a>
+    <a href="#booking" class="menu-cta">Rezerviši</a>
   </nav>
   <button class="burger" id="burger" aria-label="Meni" aria-expanded="false"><span></span><span></span><span></span></button>
 </header>
@@ -202,11 +291,12 @@
     <h1 class="reveal">
       <span class="h1-top">Dobro došli u</span>
       <span class="neon-title">Golden Wish</span>
+      <span class="sr-only"> – apartmani na Zlatiboru</span>
     </h1>
     <p class="script reveal">Vaš odmor na Zlatiboru</p>
     <p class="lead reveal">Priroda ~ luksuz ~ odmor. Jutra sa pogledom, večeri za pamćenje.</p>
     <div class="hero-actions reveal">
-      <a href="#kontakt" class="btn btn-gold">Rezerviši boravak</a>
+      <a href="#booking" class="btn btn-gold">Rezerviši boravak</a>
       <a href="#galerija" class="btn btn-ghost">Pogledaj galeriju</a>
     </div>
   </div>
@@ -230,7 +320,7 @@
       <div class="neon-line reveal"></div>
       <p class="reveal">Golden Wish je mesto gde se luksuz susreće sa mirisom planinskog vazduha. Elegantno opremljen premium apartman, topla drvena enterijerska rešenja i pažljivo osmišljen detalj u svakom kutku stvaraju osećaj kao da ste došli kući, samo mnogo lepše.</p>
       <p class="reveal">Bazen, restoran i spa u sklopu objekta, uz bezbedno parkiranje i svega nekoliko minuta lagane šetnje do centra Zlatibora, čine vaš boravak potpuno bezbrižnim.</p>
-      <a href="#kontakt" class="btn btn-gold reveal">Proverite slobodne termine</a>
+      <a href="#booking" class="btn btn-gold reveal">Proverite slobodne termine</a>
     </div>
     <div class="col-media reveal">
       <div class="frame glow-frame">
@@ -328,7 +418,7 @@
       <figure class="g-item" data-cat="apartman"><div class="ph" data-label="Spavaća soba"><img src="KREVET.png" alt="Spavaća soba" loading="lazy" onerror="this.remove()"></div><figcaption>Spavaća soba</figcaption></figure>
       <figure class="g-item" data-cat="apartman"><div class="ph" data-label="Kupatilo"><img src="VC.png" alt="Kupatilo" loading="lazy" onerror="this.remove()"></div><figcaption>Kupatilo</figcaption></figure>
       <figure class="g-item big" data-cat="restoran"><div class="ph" data-label="Restoran"><img src="VRATA.png" alt="Restoran" loading="lazy" onerror="this.remove()"></div><figcaption>Restoran</figcaption></figure>
-      <figure class="g-item" data-cat="restoran"><div class="ph" data-label="Bar"><img src="TV2.png" alt="" loading="lazy" onerror="this.remove()"></div><figcaption>Bar</figcaption></figure>
+      <figure class="g-item" data-cat="restoran"><div class="ph" data-label="Bar"><img src="TV2.png" alt="Bar u restoranu Golden Wish" loading="lazy" onerror="this.remove()"></div><figcaption>Bar</figcaption></figure>
       <figure class="g-item" data-cat="restoran"><div class="ph" data-label="Postavka stola"><img src="restoran.png" alt="Postavljen sto" loading="lazy" onerror="this.remove()"></div><figcaption>Postavka stola</figcaption></figure>
       <figure class="g-item" data-cat="restoran"><div class="ph" data-label="Vinoteka"><img src="vino.png" alt="Vinoteka" loading="lazy" onerror="this.remove()"></div><figcaption>Vinoteka</figcaption></figure>
       <figure class="g-item big" data-cat="spoljasnjost"><div class="ph" data-label="Golden Wish"><img src="lokacia2.png" alt="Pogled na zgradu" loading="lazy" onerror="this.remove()"></div><figcaption>Pogled iz vazduha</figcaption></figure>
@@ -432,7 +522,7 @@
       </a>
     </div>
   </div>
-  <p class="copy">© <span id="year"></span> Golden Wish Apartmani Zlatibor. Sva prava zadržana <br **Designed & Developed by Srecko Prodanovic** </p>
+  <p class="copy">© <span id="year"></span> Golden Wish Apartmani Zlatibor. Sva prava zadržana.</p>
 </footer>
 
 <!-- Plutajuće dugme za poziv -->
